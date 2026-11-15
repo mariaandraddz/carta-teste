@@ -264,13 +264,7 @@ function tick() {
   });
   if (hearts.length) { requestAnimationFrame(tick); } else { running = false; ctx.clearRect(0, 0, window.innerWidth, window.innerHeight); }
 }
-<button id="abrirModal">Abrir Pop-up</button>
 
-<dialog id="meuPopup">
-  <h2>Título do Pop-up</h2>
-  <p>Este é um exemplo de pop-up nativo do HTML.</p>
-  <button id="fecharModal">Fechar</button>
-</dialog>
 function burst() {
   if (reduce) { return; }
   for (var i = 0; i < 40; i++) {
