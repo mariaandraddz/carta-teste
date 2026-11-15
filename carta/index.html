@@ -1,0 +1,289 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<style>body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
+<title>Carta para Você</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Caveat:wght@600&family=DM+Sans:wght@400;500&family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;1,9..144,400&display=swap">
+<style>
+/* Layout: uma carta de coluna única, com cartões que viram para revelar motivos e um pedido final. */
+:root {
+  --bg: #fbf1f3;
+  --surface: #ffffff;
+  --fg: #3a1e2b;
+  --muted: #7d5a6a;
+  --accent: #c2275c;
+  --accent-soft: #f6d3de;
+  --line: #ecd2da;
+  --on-accent: #ffffff;
+  --font-display: "Fraunces", Georgia, "Times New Roman", serif;
+  --font-body: "DM Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-hand: "Caveat", "Segoe Script", cursive;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #1d1219;
+    --surface: #2a1a24;
+    --fg: #f7e6ec;
+    --muted: #c4a0b0;
+    --accent: #ff7aa2;
+    --accent-soft: #4a2536;
+    --line: #43283a;
+    --on-accent: #2a0f1a;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #1d1219;
+  --surface: #2a1a24;
+  --fg: #f7e6ec;
+  --muted: #c4a0b0;
+  --accent: #ff7aa2;
+  --accent-soft: #4a2536;
+  --line: #43283a;
+  --on-accent: #2a0f1a;
+  color-scheme: dark;
+}
+
+* { box-sizing: border-box; }
+body {
+  background: var(--bg);
+  color: var(--fg);
+  font-family: var(--font-body);
+  font-size: 17px;
+  line-height: 1.7;
+  padding-block: 48px 72px;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+}
+main { max-width: 640px; margin: 0 auto; display: flex; flex-direction: column; gap: 56px; }
+
+.hero { display: flex; flex-direction: column; gap: 16px; padding-top: 16px; }
+.eyebrow { font-size: 13px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--muted); }
+h1 {
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: clamp(44px, 12vw, 76px);
+  line-height: 1.02;
+  letter-spacing: -0.02em;
+  margin: 0;
+  text-wrap: balance;
+}
+h1 em { color: var(--accent); font-style: italic; }
+.lede { color: var(--muted); font-size: 19px; max-width: 46ch; margin: 0; }
+
+.letter {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  padding: clamp(24px, 6vw, 44px);
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+.letter p { margin: 0; max-width: 60ch; }
+.letter .first { font-family: var(--font-display); font-size: 24px; line-height: 1.35; }
+.sign { font-family: var(--font-hand); font-size: 34px; color: var(--accent); margin-top: 8px; }
+
+h2 { font-family: var(--font-display); font-weight: 400; font-size: 30px; line-height: 1.15; margin: 0; text-wrap: balance; }
+.section-note { color: var(--muted); margin: 8px 0 0; font-size: 15px; }
+
+.cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 14px; margin-top: 20px; }
+.card {
+  font: inherit;
+  color: inherit;
+  text-align: left;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  padding: 20px;
+  min-height: 132px;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 12px;
+  transition: background 0.25s, border-color 0.25s;
+}
+.card:hover { border-color: var(--accent); }
+.card:focus-visible, .yes:focus-visible { outline: 3px solid var(--accent); outline-offset: 3px; }
+.card .q { font-family: var(--font-display); font-size: 21px; line-height: 1.3; }
+.card .a { display: none; font-size: 16px; line-height: 1.55; }
+.card .hint { font-size: 13px; color: var(--muted); letter-spacing: 0.04em; }
+.card[aria-pressed="true"] { background: var(--accent-soft); border-color: var(--accent); }
+.card[aria-pressed="true"] .a { display: block; }
+.card[aria-pressed="true"] .hint { display: none; }
+
+.ask {
+  border-top: 1px solid var(--line);
+  padding-top: 40px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  align-items: flex-start;
+}
+.ask h2 { font-size: clamp(32px, 8vw, 46px); }
+.yes {
+  font: inherit;
+  font-weight: 500;
+  background: var(--accent);
+  color: var(--on-accent);
+  border: 0;
+  border-radius: 999px;
+  padding: 14px 28px;
+  cursor: pointer;
+  transition: transform 0.2s;
+}
+.yes:hover { transform: translateY(-2px); }
+.answer { font-family: var(--font-hand); font-size: 36px; color: var(--accent); line-height: 1.2; margin: 0; min-height: 44px; }
+
+#hearts { position: fixed; inset: 0; width: 100%; height: 100%; pointer-events: none; z-index: 5; }
+
+@media (prefers-reduced-motion: reduce) {
+  .card, .yes { transition: none; }
+  .yes:hover { transform: none; }
+}
+</style>
+
+</head>
+<body>
+<canvas id="hearts" aria-hidden="true"></canvas>
+
+<main>
+  <header class="hero">
+    <span class="eyebrow">Uma carta, sem hora para acabar</span>
+    <h1>Para você, <em id="nome">meu amor</em></h1>
+    <p class="lede">Eu poderia mandar uma mensagem rápida. Preferi construir um lugar só para dizer o que sinto.</p>
+  </header>
+
+  <section class="letter" aria-label="Carta">
+    <p class="first">Existe um tipo de calma que só aparece quando você está por perto.</p>
+    <p>Eu percebi isso aos poucos. Primeiro nas coisas pequenas: a vontade de te contar como foi meu dia antes de contar para qualquer outra pessoa, a música que lembra você, a pressa de chegar até onde você está.</p>
+    <p>Você faz o mundo parecer menos barulhento. Com você eu rio de coisas bobas, falo dos meus planos sem medo de parecer exagerada e me sinto em casa, mesmo quando a gente está longe de casa.</p>
+    <p>Eu não sei tudo o que vem pela frente, mas sei que quero viver cada parte com você: os dias bons, os cansados e os que só pedem um abraço e silêncio.</p>
+    <p>Obrigada por ser meu parceiro, meu amigo e o meu lugar favorito. Eu te amo, hoje e nos dias que ainda vão chegar.</p>
+    <span class="sign">com todo o meu amor</span>
+  </section>
+
+  <section aria-labelledby="motivos">
+    <h2 id="motivos">Alguns dos motivos</h2>
+    <p class="section-note">Toque em cada cartão para ler.</p>
+    <div class="cards">
+      <button class="card" type="button" aria-pressed="false">
+        <span class="q">Quando você ri…</span>
+        <span class="a">o meu dia inteiro melhora, e eu fico tentando descobrir como fazer de novo.</span>
+        <span class="hint">Toque para abrir</span>
+      </button>
+      <button class="card" type="button" aria-pressed="false">
+        <span class="q">Quando eu estou cansada…</span>
+        <span class="a">você sabe se vai ser conselho, comida ou colo. Poucas pessoas acertam isso.</span>
+        <span class="hint">Toque para abrir</span>
+      </button>
+      <button class="card" type="button" aria-pressed="false">
+        <span class="q">Quando a gente faz planos…</span>
+        <span class="a">eu vejo um futuro leve, com você na maior parte das cenas.</span>
+        <span class="hint">Toque para abrir</span>
+      </button>
+      <button class="card" type="button" aria-pressed="false">
+        <span class="q">No meio de uma conversa longa…</span>
+        <span class="a">eu me pego pensando: que sorte a minha ter encontrado você.</span>
+        <span class="hint">Toque para abrir</span>
+      </button>
+      <button class="card" type="button" aria-pressed="false">
+        <span class="q">Nos detalhes…</span>
+        <span class="a">no jeito que você escuta, que você cuida, que você lembra do que importa para mim.</span>
+        <span class="hint">Toque para abrir</span>
+      </button>
+      <button class="card" type="button" aria-pressed="false">
+        <span class="q">Quando é só a gente…</span>
+        <span class="a">eu não preciso ser nada além de mim mesma. É o melhor presente que você me dá.</span>
+        <span class="hint">Toque para abrir</span>
+      </button>
+    </div>
+  </section>
+
+  <section class="ask" aria-labelledby="pedido">
+    <h2 id="pedido">Quer continuar escrevendo essa história comigo?</h2>
+    <button class="yes" id="yes" type="button">Quero, sempre</button>
+    <p class="answer" id="answer" aria-live="polite"></p>
+  </section>
+</main>
+
+<script>
+// Para personalizar: escreva o nome dele aqui.
+var NOME = "";
+if (NOME) { document.getElementById("nome").textContent = NOME; }
+
+var cards = document.querySelectorAll(".card");
+cards.forEach(function (c) {
+  c.addEventListener("click", function () {
+    var open = c.getAttribute("aria-pressed") === "true";
+    c.setAttribute("aria-pressed", open ? "false" : "true");
+  });
+});
+
+var reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+var canvas = document.getElementById("hearts");
+var ctx = canvas.getContext("2d");
+var hearts = [];
+var running = false;
+
+function size() {
+  var d = window.devicePixelRatio || 1;
+  canvas.width = window.innerWidth * d;
+  canvas.height = window.innerHeight * d;
+  ctx.setTransform(d, 0, 0, d, 0, 0);
+}
+size();
+window.addEventListener("resize", size);
+
+function drawHeart(x, y, s, color, alpha) {
+  ctx.save();
+  ctx.translate(x, y);
+  ctx.globalAlpha = alpha;
+  ctx.fillStyle = color;
+  ctx.beginPath();
+  ctx.moveTo(0, s * 0.3);
+  ctx.bezierCurveTo(-s, -s * 0.4, -s * 0.5, -s, 0, -s * 0.45);
+  ctx.bezierCurveTo(s * 0.5, -s, s, -s * 0.4, 0, s * 0.3);
+  ctx.fill();
+  ctx.restore();
+}
+
+function tick() {
+  ctx.clearRect(0, 0, window.innerWidth, window.innerHeight);
+  var color = getComputedStyle(document.documentElement).getPropertyValue("--accent").trim() || "#c2275c";
+  hearts = hearts.filter(function (h) { return h.y > -40 && h.life > 0; });
+  hearts.forEach(function (h) {
+    h.y -= h.v;
+    h.x += Math.sin(h.y / 30 + h.p) * 0.6;
+    h.life -= 0.004;
+    drawHeart(h.x, h.y, h.s, color, Math.max(h.life, 0));
+  });
+  if (hearts.length) { requestAnimationFrame(tick); } else { running = false; ctx.clearRect(0, 0, window.innerWidth, window.innerHeight); }
+}
+
+function burst() {
+  if (reduce) { return; }
+  for (var i = 0; i < 40; i++) {
+    hearts.push({
+      x: Math.random() * window.innerWidth,
+      y: window.innerHeight + Math.random() * 200,
+      s: 8 + Math.random() * 14,
+      v: 1.4 + Math.random() * 2.2,
+      p: Math.random() * 6,
+      life: 1
+    });
+  }
+  if (!running) { running = true; requestAnimationFrame(tick); }
+}
+
+document.getElementById("yes").addEventListener("click", function () {
+  document.getElementById("answer").textContent = "Então está combinado. Eu te amo.";
+  burst();
+});
+</script>
+</body>
+</html>
